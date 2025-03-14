@@ -1,35 +1,66 @@
-# streamlit-rag-boilerplate
+# RAG Application with Streamlit UI
 
-## Description
-
-This is a Retrieval-Augmented Generation (RAG) application built with Streamlit. It supports multiple models and vector stores, allowing users to upload PDF files and interact with the application to retrieve information based on their queries. The application maintains conversation history for a more interactive experience.
+This repository contains a Streamlit application that implements a Retrieval-Augmented Generation (RAG) pipeline. The app allows users to upload PDF documents, process them into embeddings, and ask questions based on the document content. It is designed to be modular, letting you easily switch between different vector stores (Pinecone, FAISS, or Chroma), embedding models, and LLM providers (OpenAI, Claude, or Gemini) via environment variables.
 
 ## Features
 
-- Multiple model support (OpenAI, Claude, Gemini)
-- Integration with various vector stores (FAISS, Chroma, Pinecone)
-- Conversation history to track user interactions
-- PDF file processing and text extraction
+- **Document Processing:** Extracts text from PDFs and splits it into manageable chunks using LangChain's `RecursiveCharacterTextSplitter`.
+- **Vectorstore Integration:** Supports multiple vector stores:
+  - **Pinecone**
+  - **FAISS**
+  - **Chroma**
+- **Configurable LLM Integration:** Easily choose among different LLM providers:
+  - **OpenAI**
+  - **Claude**
+  - **Gemini**
+- **Interactive UI:** Upload PDFs, process files, and ask questions interactively.
 
-## Installation
+## Prerequisites
 
-To install the required dependencies, run the following command:
+- Python 3.7 or higher
+- API keys for:
+  - **OpenAI**
+  - **Pinecone** (if using Pinecone)
+  - **Claude** (if using Claude)
+  - **Gemini** (if using Gemini)
 
-```bash
-pip install -r requirements.txt
-```
+## Setup
+
+1. **Clone the Repository**
+
+   ```bash
+   git clone https://github.com/musabrasheed-pl/streamlit-rag-boilerplate.git
+   cd streamlit-rag-boilerplate
+
+2. **Create a Virtual Environment & Install Dependencies**
+    
+   ```bash
+   python -m venv venv
+   source venv/bin/activate   # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+
+3. **Configure Environment Variables**
+
+    ```bash
+   # API Keys
+    OPENAI_API_KEY=your_openai_api_key
+    PINECONE_API_KEY=your_pinecone_api_key
+    CLAUDE_API_KEY=your_claude_api_key      # Only required if using Claude
+    GEMINI_API_KEY=your_gemini_api_key        # Only required if using Gemini
+    
+    # Configuration
+    VECTORSTORE_TYPE=chroma   # Options: pinecone, faiss, chroma
+    EMBEDDING_MODEL=text-embedding-3-large
+    LLM_PROVIDER=openai       # Options: openai, claude, gemini
+    LLM_MODEL=gpt-4o          # Or the appropriate model name for your provider
+
+4. **Start the Streamlit App**
+    
+   ```bash
+   streamlit run app.py
+
 
 ## Usage
-
-1. Set up your environment variables in the `.env` file.
-2. Run the application using:
-
-```bash
-streamlit run app.py
-```
-
-3. Upload your PDF files and interact with the application by asking questions about the documents.
-
-## Demo
-
-![Demo Image](img/demo.png)
+- File Upload: Use the file uploader to select and upload one or more PDF files.
+- Process Files: Click the Process Files button to extract text and initialize the vector store.
+- Ask a Question: Enter your query in the provided text input and view the generated answer.
