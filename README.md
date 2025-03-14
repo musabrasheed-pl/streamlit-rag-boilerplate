@@ -29,3 +29,7 @@ streamlit run app.py
 ```
 
 3. Upload your PDF files and interact with the application by asking questions about the documents.
+
+## Demo
+
+![Demo Image](img/demo.png)
