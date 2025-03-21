@@ -14,14 +14,48 @@ from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS, Chroma, Pinecone as LangchainPinecone
 from langchain_community.chat_models import ChatOpenAI, ChatGooglePalm, ChatAnthropic
 
-# Load environment variables from the .env file
+
+# Ensure set_page_config is the first Streamlit command
+st.set_page_config(layout="wide")
+# Load environment variables from the .env file (initially empty)
 load_dotenv()
 
+# Streamlit Sidebar for API Credentials
+st.sidebar.title("🔑 Enter API Credentials")
+openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
+pinecone_api_key = st.sidebar.text_input("Pinecone API Key (if using Pinecone)", type="password")
+claude_api_key = st.sidebar.text_input("Claude API Key (if using Claude)", type="password")
+gemini_api_key = st.sidebar.text_input("Gemini API Key (if using Gemini)", type="password")
+vectorstore_type = st.sidebar.selectbox("Vectorstore Type", ["chroma", "faiss", "pinecone"])
+embedding_model = st.sidebar.text_input("Embedding Model", "text-embedding-3-large")
+llm_provider = st.sidebar.selectbox("LLM Provider", ["openai", "claude", "gemini"])
+llm_model = st.sidebar.text_input("LLM Model", "gpt-4o")
+
+# Ensure required keys are entered
+if not openai_api_key:
+    st.sidebar.warning("Please enter your OpenAI API Key.")
+    st.stop()
+
+if vectorstore_type == "pinecone" and not pinecone_api_key:
+    st.sidebar.warning("Pinecone API Key is required for Pinecone vectorstore.")
+    st.stop()
+
 # === Configuration Variables ===
-VECTORSTORE_TYPE = os.getenv("VECTORSTORE_TYPE", "pinecone").lower()
-EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-large")
-LLM_PROVIDER = os.getenv("LLM_PROVIDER", "openai").lower()
-LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o")
+VECTORSTORE_TYPE = vectorstore_type.lower()
+EMBEDDING_MODEL = embedding_model
+LLM_PROVIDER = llm_provider.lower()
+LLM_MODEL = llm_model
+PINECONE_API_KEY = pinecone_api_key
+
+# Store environment variables in session state
+st.session_state["OPENAI_API_KEY"] = openai_api_key
+st.session_state["PINECONE_API_KEY"] = pinecone_api_key
+st.session_state["CLAUDE_API_KEY"] = claude_api_key
+st.session_state["GEMINI_API_KEY"] = gemini_api_key
+st.session_state["VECTORSTORE_TYPE"] = VECTORSTORE_TYPE
+st.session_state["EMBEDDING_MODEL"] = EMBEDDING_MODEL
+st.session_state["LLM_PROVIDER"] = LLM_PROVIDER
+st.session_state["LLM_MODEL"] = LLM_MODEL
 
 # Initialize session state
 if 'conversation_history' not in st.session_state:
@@ -167,7 +201,6 @@ class RAGApp:
 #                Main
 # ====================================
 def main():
-    st.set_page_config(layout="wide")
 
     # Sidebar
     with st.sidebar:
