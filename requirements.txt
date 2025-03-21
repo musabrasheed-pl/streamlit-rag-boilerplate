@@ -2,10 +2,3 @@ langchain_community
 streamlit
 python-dotenv
 PyPDF2
-langchain-faiss
-langchain-chroma
-langchain
-openai
-pinecone
-python-dotenv
-langchain-pinecone
